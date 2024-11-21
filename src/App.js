@@ -5,14 +5,30 @@ import AddTodo from "./components/AddTodo";
 function App() {
   const [todos, setTodos] = useState([]);
 
-  const addTodo = (text) => {
-    setTodos([...todos, { id: Date.now(), text, completed: false }]);
+  const addTodo = (text, description, expectedCompletion) => {
+    setTodos([
+      ...todos,
+      {
+        id: Date.now(),
+        text,
+        description,
+        expectedCompletion,
+        completed: false,
+        completionTime: null,
+      },
+    ]);
   };
 
   const toggleTodo = (id) => {
     setTodos(
       todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        todo.id === id
+          ? {
+              ...todo,
+              completed: !todo.completed,
+              completionTime: !todo.completed ? new Date().toLocaleString() : null,
+            }
+          : todo
       )
     );
   };
@@ -22,10 +38,12 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>Todo App</h1>
-      <AddTodo addTodo={addTodo} />
-      <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
+    <div className="app">
+      <div className="container">
+        <h1>Todo App</h1>
+        <AddTodo addTodo={addTodo} />
+        <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
+      </div>
     </div>
   );
 }
